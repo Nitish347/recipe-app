@@ -4,25 +4,32 @@ import 'package:recipe_app/login.dart';
 import 'package:recipe_app/main.dart';
 
 class SplashScreen extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home:
-      AnimatedSplashScreen(
-          splashIconSize: 300,
+      debugShowCheckedModeBanner: false,
+      home: AnimatedSplashScreen(
+          splashIconSize: 500,
           nextScreen: LoginPage(),
           backgroundColor: Colors.black,
+          animationDuration: Duration(seconds: 1),
+          splash: Container(
 
-          animationDuration:Duration(seconds: 2),
-          splash:Container(
-            child: Image.asset("assets/logo.png",),
+            child: Column(
+                  children: [
+                Image.asset(
+                  "assets/logo.png",
+                ),
+                    SizedBox(height:100,),
+                    Expanded(child: Text("Made By: Nitish Chaurasiya",style: TextStyle(color: Colors.white,fontSize: 10),))
+
+              ]),
+          ),
           )
-      ),
     );
   }
 }
-void main(){
+
+void main() {
   runApp(SplashScreen());
 }
