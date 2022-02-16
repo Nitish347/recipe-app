@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _loading = false;
 
 
   TextEditingController textEditingController = new TextEditingController();
@@ -29,15 +30,28 @@ class _HomePageState extends State<HomePage> {
   String appKey = "25cf044a32e47f4cf5ec9ec50171089a	";
 
   getRecipes(String query) async {
-    String url = "https://api.edamam.com/search?q=$query&app_id=cd6b7967&app_key=25cf044a32e47f4cf5ec9ec50171089a	";
-    var response = await http.get(Uri.parse(url));
-    Map<String, dynamic> jsonData = json.decode(response.body);
-    jsonData["hits"].forEach((element){
-    RecipeModel recipeModel =  new RecipeModel();
-    recipeModel =RecipeModel.fromMap(element["recipe"]);
-    recipes.add(recipeModel);
-    });
-    print(recipes);
+    if(query.isNotEmpty) {
+      setState(() {
+        _loading = true;
+      });
+      recipes = new List();
+      String url = "https://api.edamam.com/search?q=$query&app_id=cd6b7967&app_key=25cf044a32e47f4cf5ec9ec50171089a	";
+      var response = await http.get(Uri.parse(url));
+      Map<String, dynamic> jsonData = json.decode(response.body);
+      jsonData["hits"].forEach((element) {
+        RecipeModel recipeModel = new RecipeModel();
+        recipeModel = RecipeModel.fromMap(element["recipe"]);
+        recipes.add(recipeModel);
+      });
+      setState(() {
+        _loading = false;
+      });
+      print(recipes);
+      print("doing it");
+    }
+    else{
+      print("not doing it");
+    }
 
   }
 
@@ -127,6 +141,9 @@ class _HomePageState extends State<HomePage> {
                               if (textEditingController.text.isNotEmpty){
                                 getRecipes(textEditingController.text);
                                 print(textEditingController.text);
+                                setState(() {
+
+                                });
                               }
                               else{
                                 print("yes");
@@ -208,6 +225,7 @@ class _RecipeBoxState extends State<RecipeBox> {
                       builder: (context) => RecipePage(
                         recipeUrl: widget.url,
                       )));
+
 
           },
           child: Container(
