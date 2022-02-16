@@ -1,9 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+
 import 'package:recipe_app/apiModel.dart';
+
+
+import 'dart:io' show Platform;
 
 class HomePage extends StatefulWidget {
 
@@ -20,10 +26,10 @@ class _HomePageState extends State<HomePage> {
   List<RecipeModel> recipes = new List<RecipeModel>();
 
   String appID = "cd6b7967";
-  String appKey = "bb5fb885a939868aa526e8a593a4d86b";
+  String appKey = "25cf044a32e47f4cf5ec9ec50171089a	";
 
   getRecipes(String query) async {
-    String url = "https://api.edamam.com/search?q=$query&app_id=cd6b7967&app_key=bb5fb885a939868aa526e8a593a4d86b";
+    String url = "https://api.edamam.com/search?q=$query&app_id=cd6b7967&app_key=25cf044a32e47f4cf5ec9ec50171089a	";
     var response = await http.get(Uri.parse(url));
     Map<String, dynamic> jsonData = json.decode(response.body);
     jsonData["hits"].forEach((element){
@@ -137,29 +143,32 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height/20,),
-                // Container(
-                //   height: 2,
-                //   width: MediaQuery.of(context).size.width,
-                //   color: Colors.green,
-                // ),
-                 Container(
-                    child: GridView(
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          crossAxisSpacing: 50.0,
-                            mainAxisSpacing: 50.0, maxCrossAxisExtent: 200.0),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        physics: ClampingScrollPhysics(),
-                        children: List.generate(recipes.length, (index) {
-                          return GridTile(
-                              child: RecipeBox(
-                                title: recipes[index].label,
-                                imgUrl: recipes[index].image,
-                                desc: recipes[index].source,
-                                url: recipes[index].url,
-                              ));
-                        })),
-                  ),
+                Container(
+                  height: 2,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.green,
+                ),
+                 Padding(
+                   padding: EdgeInsets.all(15),
+                   child: Container(
+                      child: GridView(
+                          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                            crossAxisSpacing: 30.0,
+                              mainAxisSpacing: 30.0, maxCrossAxisExtent: 200.0),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          physics: ClampingScrollPhysics(),
+                          children: List.generate(recipes.length, (index) {
+                            return GridTile(
+                                child: RecipeBox(
+                                  title: recipes[index].label,
+                                  imgUrl: recipes[index].image,
+                                  desc: recipes[index].source,
+                                  url: recipes[index].url,
+                                ));
+                          })),
+                    ),
+                 ),
 
 
                 // Text("ZAIKA",style: TextStyle(color: Colors.white,fontSize: MediaQuery.of(context).size.height/12,fontWeight: FontWeight.bold),),
@@ -192,60 +201,66 @@ class _RecipeBoxState extends State<RecipeBox> {
       children:[
         GestureDetector(
           onTap: () {
-            // if (kIsWeb) {
-            //   _launchURL(widget.url);
-            // } else {
-            //   print(widget.url + " this is what we are going to see");
-            //   Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //           builder: (context) => RecipeView(
-            //             postUrl: widget.url,
-            //           )));
-            // }
+              print(widget.url + " this is what we are going to see");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RecipePage(
+                        recipeUrl: widget.url,
+                      )));
+
           },
           child: Container(
-            margin: EdgeInsets.all(8),
+            // margin: EdgeInsets.only(left: 12,right: 12),
+
             child: Stack(
-              children: <Widget>[
-                Image.network(
-                  widget.imgUrl,
-                  height: 200,
-                  width: 200,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                  width: 200,
-                  alignment: Alignment.bottomLeft,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [Colors.white30, Colors.white],
-                          begin: FractionalOffset.centerRight,
-                          end: FractionalOffset.centerLeft)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          widget.title,
-                          style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.black54,
-                              fontFamily: 'Overpass'),
-                        ),
-                        Text(
-                          widget.desc,
-                          style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.black54,
-                              fontFamily: 'OverpassRegular'),
-                        )
-                      ],
+
+              children:[ Container(
+                child:Stack(
+                  children: [
+                    Image.network(
+                      widget.imgUrl,
+                      fit: BoxFit.cover,
                     ),
-                  ),
-                )
-              ],
+                    Positioned(
+                      bottom: 0,
+                      child: Container(
+                        width: 200,
+                        alignment: Alignment.bottomLeft,
+                        decoration: BoxDecoration(
+                          // borderRadius: BorderRadius.circular(20),
+                            gradient: LinearGradient(
+                                colors: [Colors.green.withOpacity(.5), Colors.greenAccent.withOpacity(.5)],
+                                begin: FractionalOffset.centerRight,
+                                end: FractionalOffset.centerLeft)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                widget.title,
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black,
+                                    fontFamily: 'Overpass'),
+                              ),
+                              Text(
+                                widget.desc,
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.black54,
+                                    fontFamily: 'OverpassRegular'),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+                  ]
             ),
           ),
         ),
@@ -253,4 +268,39 @@ class _RecipeBoxState extends State<RecipeBox> {
     );
   }
 }
+
+class RecipePage extends StatefulWidget {
+  final String recipeUrl;
+  RecipePage({this.recipeUrl});
+
+
+  @override
+  State<RecipePage> createState() => _RecipePageState();
+}
+
+class _RecipePageState extends State<RecipePage> {
+  // Add from here ...
+  @override
+  void initState() {
+    if (Platform.isAndroid) {
+      WebView.platform = SurfaceAndroidWebView();
+    }
+    super.initState();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        padding: EdgeInsets.only(top:30),
+        child: WebView(
+          javascriptMode: JavascriptMode.unrestricted,
+          initialUrl:widget.recipeUrl,
+        ),
+      ),
+    );
+  }
+}
+
 
