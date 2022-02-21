@@ -8,19 +8,15 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:recipe_app/apiModel.dart';
 
-
 import 'dart:io' show Platform;
 
 class HomePage extends StatefulWidget {
-
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   bool _loading = false;
-
 
   TextEditingController textEditingController = new TextEditingController();
 
@@ -30,12 +26,13 @@ class _HomePageState extends State<HomePage> {
   String appKey = "25cf044a32e47f4cf5ec9ec50171089a	";
 
   getRecipes(String query) async {
-    if(query.isNotEmpty) {
+    if (query.isNotEmpty) {
       setState(() {
         _loading = true;
       });
       recipes = new List();
-      String url = "https://api.edamam.com/search?q=$query&app_id=cd6b7967&app_key=25cf044a32e47f4cf5ec9ec50171089a	";
+      String url =
+          "https://api.edamam.com/search?q=$query&app_id=cd6b7967&app_key=25cf044a32e47f4cf5ec9ec50171089a	";
       var response = await http.get(Uri.parse(url));
       Map<String, dynamic> jsonData = json.decode(response.body);
       jsonData["hits"].forEach((element) {
@@ -48,11 +45,9 @@ class _HomePageState extends State<HomePage> {
       });
       print(recipes);
       print("doing it");
-    }
-    else{
+    } else {
       print("not doing it");
     }
-
   }
 
   @override
@@ -111,47 +106,45 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.green.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(50)),
                   child: Padding(
-                    padding: EdgeInsets.only(left: 15,bottom: 5,right: 15),
+                    padding: EdgeInsets.only(left: 15, bottom: 5, right: 15),
                     child: Container(
-
                       child: Row(
                         children: [
                           Expanded(
                             child: TextField(
-
                               style: TextStyle(
                                 fontSize: 19,
                                 color: Colors.white,
                               ),
-                              controller : textEditingController ,
+                              controller: textEditingController,
                               decoration: InputDecoration(
-                                border: InputBorder.none,
+                                  border: InputBorder.none,
                                   hintText: "Enter Ingridient",
                                   hintStyle: TextStyle(
                                     fontSize: 18,
                                     color: Colors.green.withOpacity(0.8),
-                                  )
-                              ),
-
+                                  )),
                             ),
                           ),
-                          SizedBox(width: 5,),
+                          SizedBox(
+                            width: 5,
+                          ),
                           InkWell(
-                            onTap: (){
-                              if (textEditingController.text.isNotEmpty){
+                            onTap: () {
+                              if (textEditingController.text.isNotEmpty) {
                                 getRecipes(textEditingController.text);
                                 print(textEditingController.text);
-                                setState(() {
-
-                                });
-                              }
-                              else{
+                              } else {
                                 print("yes");
                               }
                             },
                             child: Container(
                               // padding: EdgeInsets.all(0),
-                              child: Icon(CupertinoIcons.search,color: Colors.green,size: 30,),
+                              child: Icon(
+                                CupertinoIcons.search,
+                                color: Colors.green,
+                                size: 30,
+                              ),
                             ),
                           )
                         ],
@@ -159,36 +152,53 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height/20,),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 20,
+                ),
                 Container(
                   height: 2,
                   width: MediaQuery.of(context).size.width,
                   color: Colors.green,
                 ),
-                 Padding(
-                   padding: EdgeInsets.all(15),
-                   child: Container(
-                      child: GridView(
-                          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                            crossAxisSpacing: 30.0,
-                              mainAxisSpacing: 30.0, maxCrossAxisExtent: 200.0),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          physics: ClampingScrollPhysics(),
-                          children: List.generate(recipes.length, (index) {
-                            return GridTile(
-                                child: RecipeBox(
+                _loading
+                    ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height/2,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.green,
+                          backgroundColor: Colors.greenAccent,
+                        ),
+                      ),
+                    ),
+
+                  ],
+                )
+                    : Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Container(
+                          child: GridView(
+                              gridDelegate:
+                                  SliverGridDelegateWithMaxCrossAxisExtent(
+                                      crossAxisSpacing: 30.0,
+                                      mainAxisSpacing: 30.0,
+                                      maxCrossAxisExtent: 200.0),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              physics: ClampingScrollPhysics(),
+                              children: List.generate(recipes.length, (index) {
+                                return GridTile(
+                                    child: RecipeBox(
                                   title: recipes[index].label,
                                   imgUrl: recipes[index].image,
                                   desc: recipes[index].source,
                                   url: recipes[index].url,
                                 ));
-                          })),
-                    ),
-                 ),
-
-
-                // Text("ZAIKA",style: TextStyle(color: Colors.white,fontSize: MediaQuery.of(context).size.height/12,fontWeight: FontWeight.bold),),
+                              })),
+                        ),
+                      ),
               ],
             ),
           ),
@@ -198,14 +208,13 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-
 void main() {
   runApp(HomePage());
 }
 
 class RecipeBox extends StatefulWidget {
-  String title,desc,url,imgUrl;
-  RecipeBox({this.title,this.desc,this.imgUrl,this.url});
+  String title, desc, url, imgUrl;
+  RecipeBox({this.title, this.desc, this.imgUrl, this.url});
 
   @override
   _RecipeBoxState createState() => _RecipeBoxState();
@@ -215,26 +224,23 @@ class _RecipeBoxState extends State<RecipeBox> {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      children:[
+      children: [
         GestureDetector(
           onTap: () {
-              print(widget.url + " this is what we are going to see");
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => RecipePage(
-                        recipeUrl: widget.url,
-                      )));
-
-
+            print(widget.url + " this is what we are going to see");
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RecipePage(
+                          recipeUrl: widget.url,
+                        )));
           },
           child: Container(
             // margin: EdgeInsets.only(left: 12,right: 12),
 
-            child: Stack(
-
-              children:[ Container(
-                child:Stack(
+            child: Stack(children: [
+              Container(
+                child: Stack(
                   children: [
                     Image.network(
                       widget.imgUrl,
@@ -246,9 +252,11 @@ class _RecipeBoxState extends State<RecipeBox> {
                         width: 200,
                         alignment: Alignment.bottomLeft,
                         decoration: BoxDecoration(
-                          // borderRadius: BorderRadius.circular(20),
                             gradient: LinearGradient(
-                                colors: [Colors.green.withOpacity(.5), Colors.greenAccent.withOpacity(.5)],
+                                colors: [
+                              Colors.green.withOpacity(.5),
+                              Colors.greenAccent.withOpacity(.5)
+                            ],
                                 begin: FractionalOffset.centerRight,
                                 end: FractionalOffset.centerLeft)),
                         child: Padding(
@@ -259,16 +267,16 @@ class _RecipeBoxState extends State<RecipeBox> {
                               Text(
                                 widget.title,
                                 style: TextStyle(
-                                    fontSize: 13,
+                                    fontSize: 15,
                                     color: Colors.black,
                                     fontFamily: 'Overpass'),
                               ),
                               Text(
                                 widget.desc,
                                 style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.black54,
-                                    fontFamily: 'OverpassRegular'),
+                                    fontSize: 11,
+                                    color: Colors.black87,
+                                    ),
                               )
                             ],
                           ),
@@ -278,8 +286,7 @@ class _RecipeBoxState extends State<RecipeBox> {
                   ],
                 ),
               ),
-                  ]
-            ),
+            ]),
           ),
         ),
       ],
@@ -291,13 +298,11 @@ class RecipePage extends StatefulWidget {
   final String recipeUrl;
   RecipePage({this.recipeUrl});
 
-
   @override
   State<RecipePage> createState() => _RecipePageState();
 }
 
 class _RecipePageState extends State<RecipePage> {
-  // Add from here ...
   @override
   void initState() {
     if (Platform.isAndroid) {
@@ -306,19 +311,23 @@ class _RecipePageState extends State<RecipePage> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: Text(
+          "Recipe",
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+      ),
       body: Container(
-        padding: EdgeInsets.only(top:30),
+        padding: EdgeInsets.only(top: 30),
         child: WebView(
           javascriptMode: JavascriptMode.unrestricted,
-          initialUrl:widget.recipeUrl,
+          initialUrl: widget.recipeUrl,
         ),
       ),
     );
   }
 }
-
-

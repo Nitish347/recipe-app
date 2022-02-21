@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:recipe_app/Home_Page.dart';
-import 'package:recipe_app/login.dart';
-import 'package:recipe_app/main.dart';
+
 
 class SplashScreen extends StatelessWidget {
   @override
@@ -11,7 +10,7 @@ class SplashScreen extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: AnimatedSplashScreen(
           splashIconSize: 500,
-          nextScreen: LoginPage(),
+          nextScreen: HomePage(),
           backgroundColor: Colors.black,
           animationDuration: Duration(seconds: 1),
           splash: Container(
